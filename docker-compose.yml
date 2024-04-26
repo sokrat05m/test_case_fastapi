@@ -1,0 +1,33 @@
+services:
+  web-app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - ./src:/src
+
+    environment:
+      - POSTGRES_HOST=database
+      - POSTGRES_DB=db_name
+      - POSTGRES_USER=db_user
+      - POSTGRES_PASSWORD=123456
+
+    depends_on:
+      - db
+
+  database:
+    image: postgres:16-alpine3.18
+    environment:
+      - POSTGRES_HOST=database
+      - POSTGRES_DB=db_name
+      - POSTGRES_USER=db_user
+      - POSTGRES_PASSWORD=123456
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+
