@@ -2,6 +2,7 @@ services:
   web-app:
     build:
       context: .
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
 
@@ -14,8 +15,11 @@ services:
       - POSTGRES_USER=db_user
       - POSTGRES_PASSWORD=123456
 
+    command: >
+      sh -c "uvicorn main:app --host 0.0.0.0 --reload"
+
     depends_on:
-      - db
+      - database
 
   database:
     image: postgres:16-alpine3.18
@@ -24,6 +28,9 @@ services:
       - POSTGRES_DB=db_name
       - POSTGRES_USER=db_user
       - POSTGRES_PASSWORD=123456
+
+    ports:
+      - "5432:5432"
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
