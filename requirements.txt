@@ -3,3 +3,4 @@ psycopg2==2.9.9
 requests==2.31.0
 SQLAlchemy==2.0.29
 alembic==1.13.1
+sqladmin==0.16.1

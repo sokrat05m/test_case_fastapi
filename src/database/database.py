@@ -6,6 +6,7 @@ DATABASE_URL = 'postgresql://db_user:123456@database:5432/db_name'
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+Base.metadata.create_all(engine)
 
 
 def get_db():
