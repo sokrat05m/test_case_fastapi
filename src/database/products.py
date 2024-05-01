@@ -1,9 +1,10 @@
+from decimal import Decimal
 from typing import List
 
-from sqlalchemy import String, Float, Integer, Text, ForeignKey
+from sqlalchemy import String, Text, ForeignKey, DECIMAL
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .database import Base
+from .config import Base
 
 
 class Category(Base):
@@ -30,19 +31,20 @@ class Subcategory(Base):
     def __repr__(self):
         return self.subcategory_title
 
+
 class Product(Base):
     __tablename__ = 'products_table'
 
     id: Mapped[int] = mapped_column(primary_key=True)
     product_title: Mapped[str]
-    price: Mapped[float]
-    discount_price: Mapped[float]
+    price: Mapped[Decimal] = mapped_column(DECIMAL(10, 2))
+    discount_price: Mapped[Decimal] = mapped_column(DECIMAL(10, 2))
     product_balance: Mapped[int]
     product_characteristics: Mapped[str] = mapped_column(Text)
     category_id: Mapped[int] = mapped_column(ForeignKey('categories_table.id', ondelete='CASCADE'))
     category: Mapped['Category'] = relationship(back_populates='products')
-    subcategory_id: Mapped[int] = mapped_column(ForeignKey('subcategories_table.id', ondelete='CASCADE'))
-    subcategory: Mapped['Subcategory'] = relationship(back_populates='products')
+    subcategory_id: Mapped[int | None] = mapped_column(ForeignKey('subcategories_table.id', ondelete='CASCADE'))
+    subcategory: Mapped[Subcategory | None] = relationship(back_populates='products')
 
     def __repr__(self):
         return self.product_title

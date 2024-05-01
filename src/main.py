@@ -1,36 +1,23 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 from sqladmin import Admin, ModelView
-from sqlalchemy.orm import Session
 
-from database.crud import get_product_by_id
-from database.database import engine, get_db
+from admin import CategoryAdmin, SubcategoryAdmin, ProductAdmin, UserAdmin
+from auth.views import auth_router
+from database.config import engine
 from database.products import Category, Subcategory, Product
-from database.schemas import ProductSchema
+from products.views import product_router
 
-app = FastAPI()
 
+def create_app() -> FastAPI:
+    app = FastAPI()
+    app.include_router(product_router)
+    app.include_router(auth_router)
+    return app
+
+
+app = create_app()
 admin = Admin(app, engine)
-
-
-class CategoryAdmin(ModelView, model=Category):
-    column_list = [Category.id, Category.category_title]
-
-
-class SubcategoryAdmin(ModelView, model=Subcategory):
-    column_list = [Subcategory.id, Subcategory.subcategory_title]
-
-
-class ProductAdmin(ModelView, model=Product):
-    column_list = [Product.id, Product.product_title]
-
-
 admin.add_view(CategoryAdmin)
 admin.add_view(SubcategoryAdmin)
 admin.add_view(ProductAdmin)
-
-
-@app.get("/products/{product_id}", response_model=ProductSchema)
-async def get_product(product_id: int, db: Session = Depends(get_db)):
-    product = get_product_by_id(db=db, product_id=product_id)
-    return product
-
+admin.add_view(UserAdmin)
