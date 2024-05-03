@@ -3,7 +3,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from database.products import Product
-from products.crud import get_product, get_products, get_products_by_category
+from products.service import get_product, get_products, get_products_by_category, min_max_sum
 from database.config import get_db
 from products.schemas import ProductSchema, MinMaxSumSchema
 
@@ -18,10 +18,7 @@ async def get_all_products(db: Session = Depends(get_db)):
 
 @product_router.get("/min-max-sum", response_model=MinMaxSumSchema)
 async def get_max_min_sum(db: Session = Depends(get_db)):
-    min_price = func.min(Product.price).label('min_price')
-    max_price = func.max(Product.price).label('max_price')
-    total_balance_sum = func.sum(Product.price * Product.product_balance).label('total_balance_sum')
-    result = db.execute(select(min_price, max_price, total_balance_sum)).first()
+    result = min_max_sum(db=db)
     return result
 
 

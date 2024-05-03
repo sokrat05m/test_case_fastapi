@@ -1,15 +1,15 @@
-from pydantic import BaseModel, EmailStr, field_validator
+from pydantic import BaseModel, EmailStr, Field
 
 
 class UserBase(BaseModel):
-    username: str
+    username: str = Field(min_length=4, max_length=30)
     first_name: str
     last_name: str
     email: EmailStr
 
 
-class UserInDB(UserBase):
-    password: str
+class UserCreate(UserBase):
+    password: str = Field(min_length=5)
     phone: str
 
     class Config:
@@ -21,5 +21,5 @@ class Token(BaseModel):
     token_type: str
 
 
-class TokenData(BaseModel):
-    username: str | None = None
+
+

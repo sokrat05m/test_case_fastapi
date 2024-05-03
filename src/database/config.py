@@ -11,7 +11,6 @@ DATABASE_URL = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@database:{POST
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
-Base.metadata.create_all(engine)
 
 
 def get_db():
