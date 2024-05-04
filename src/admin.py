@@ -1,7 +1,6 @@
 from sqladmin import ModelView
 
-from database.products import Category, Subcategory, Product
-from database.users import User
+from models import Category, Subcategory, Product, User
 
 
 class CategoryAdmin(ModelView, model=Category):

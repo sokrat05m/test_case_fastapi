@@ -1,11 +1,10 @@
 from fastapi import FastAPI
-from sqladmin import Admin, ModelView
+from sqladmin import Admin
 
 from admin import CategoryAdmin, SubcategoryAdmin, ProductAdmin, UserAdmin
-from auth.views import auth_router
-from database.config import engine
-from database.products import Category, Subcategory, Product
-from products.views import product_router
+from api.routes.login import auth_router
+from core.config import engine
+from api.routes.products import product_router
 
 
 def create_app() -> FastAPI:

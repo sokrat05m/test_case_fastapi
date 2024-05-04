@@ -2,20 +2,21 @@ from datetime import timedelta
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
+from fastapi.security import OAuth2PasswordRequestForm
 
-from auth.schemas import Token, UserCreate
-from auth.service import authenticate_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, get_user, hash_password, \
-    create_user
-from database.config import get_db
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/login')
+from api.deps import SessionDep, CurrentUserDep
+from api.schemas import Token, UserCreate, UserBase
+from api.service import authenticate_user, get_user, create_user
+from core.config import ACCESS_TOKEN_EXPIRE_MINUTES
+from core.tokenize import create_access_token
+
 auth_router = APIRouter()
 
 
 @auth_router.post('/login')
-async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)) -> Token:
+async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: SessionDep) \
+        -> Token:
     user = authenticate_user(form_data.username, form_data.password, db)
     if not user:
         raise HTTPException(
@@ -33,10 +34,15 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: 
 
 
 @auth_router.post('/register')
-async def register_user(user: UserCreate, db: Session = Depends(get_db)):
+async def register_user(user: UserCreate, db: SessionDep):
     user_exists = get_user(username=user.username, db=db)
     if user_exists:
         raise HTTPException(status_code=400, detail="User already registered")
 
-    new_user = create_user(user=user, db=db)
+    create_user(user=user, db=db)
     return {"message": "user created successfully"}
+
+
+@auth_router.get("/users/me/", response_model=UserBase)
+async def read_users_me(current_user: CurrentUserDep):
+    return current_user

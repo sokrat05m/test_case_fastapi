@@ -1,10 +1,24 @@
+from datetime import datetime, timezone
 from decimal import Decimal
 from typing import List
 
-from sqlalchemy import String, Text, ForeignKey, DECIMAL
+from sqlalchemy import String, ForeignKey, DECIMAL, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .config import Base
+from core.config import Base
+
+
+class User(Base):
+    __tablename__ = 'users_table'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str]
+    first_name: Mapped[str]
+    last_name: Mapped[str]
+    email: Mapped[str]
+    password: Mapped[str]
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now(timezone.utc))
+    phone: Mapped[str] = mapped_column(String(30))
 
 
 class Category(Base):
