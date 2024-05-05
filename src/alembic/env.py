@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 from core.config import Base
-from models import Category, Subcategory, Product, User
+from models import Category, Subcategory, Product, User, Cart, CartItem
 
 
 # this is the Alembic Config object, which provides

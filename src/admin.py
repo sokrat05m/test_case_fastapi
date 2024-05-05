@@ -1,6 +1,6 @@
 from sqladmin import ModelView
 
-from models import Category, Subcategory, Product, User
+from models import Category, Subcategory, Product, User, Cart
 
 
 class CategoryAdmin(ModelView, model=Category):
@@ -17,3 +17,8 @@ class ProductAdmin(ModelView, model=Product):
 
 class UserAdmin(ModelView, model=User):
     column_list = [User.id, User.username]
+
+
+class CartAdmin(ModelView, model=Cart):
+    column_list = [Cart.id, Cart.user]
+

@@ -1,4 +1,5 @@
 from decimal import Decimal
+from typing import List
 
 from pydantic import BaseModel, Field, EmailStr
 
@@ -36,3 +37,13 @@ class MinMaxSumSchema(BaseModel):
     min_price: Decimal
     max_price: Decimal
     total_balance_sum: Decimal
+
+
+class CartItemBaseSchema(BaseModel):
+    product_id: int
+    quantity: int
+
+
+class CartSchema(BaseModel):
+    user_id: int
+    products: List['CartItemBaseSchema']
