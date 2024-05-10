@@ -4,14 +4,14 @@ from typing import List
 from pydantic import BaseModel, Field, EmailStr
 
 
-class UserBase(BaseModel):
+class UserBaseSchema(BaseModel):
     username: str = Field(min_length=4, max_length=30)
     first_name: str
     last_name: str
     email: EmailStr
 
 
-class UserCreate(UserBase):
+class UserCreateSchema(UserBaseSchema):
     password: str = Field(min_length=5)
     phone: str
 
@@ -19,12 +19,12 @@ class UserCreate(UserBase):
         orm_mode = True
 
 
-class Token(BaseModel):
+class TokenBaseSchema(BaseModel):
     access_token: str
     token_type: str
 
 
-class ProductSchema(BaseModel):
+class ProductBaseSchema(BaseModel):
     product_title: str
     price: Decimal = Field(gt=0)
     discount_price: Decimal = Field(gt=0)
@@ -44,6 +44,6 @@ class CartItemBaseSchema(BaseModel):
     quantity: int
 
 
-class CartSchema(BaseModel):
+class CartBaseSchema(BaseModel):
     user_id: int
     products: List['CartItemBaseSchema']

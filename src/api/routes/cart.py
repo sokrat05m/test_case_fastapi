@@ -1,13 +1,13 @@
 from fastapi import APIRouter
 
 from api.deps import CurrentUserDep, SessionDep
-from api.schemas import CartItemBaseSchema, CartSchema
+from api.schemas import CartItemBaseSchema, CartBaseSchema
 from api.service import create_user_cart, create_cart_item, update_cart_item_quantity
 
 cart_router = APIRouter()
 
 
-@cart_router.post("/add-to-cart", response_model=CartSchema)
+@cart_router.post("/add-to-cart", response_model=CartBaseSchema)
 async def add_product_to_cart(cart_item: CartItemBaseSchema, user: CurrentUserDep, db: SessionDep):
     if user.cart:
         user_cart = user.cart

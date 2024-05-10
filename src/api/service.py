@@ -1,7 +1,7 @@
 from sqlalchemy import select, func, and_, update
 from sqlalchemy.orm import Session
 
-from api.schemas import UserCreate
+from api.schemas import UserCreateSchema
 
 from core.tokenize import hash_password, verify_password
 from models import Product, User, Cart, CartItem
@@ -11,7 +11,7 @@ def get_user(username: str, db: Session):
     return db.scalars(select(User).where(User.username == username)).first()
 
 
-def create_user(user: UserCreate, db: Session):
+def create_user(user: UserCreateSchema, db: Session):
     hashed_password = hash_password(user.password)
     user.password = hashed_password
     db_user = User(**user.model_dump())
